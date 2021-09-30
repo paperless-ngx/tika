@@ -12,6 +12,7 @@ jobs:
     strategy:
       matrix:
         TIKA_TYPE: [full, minimal]
+        TIKA_VERSION: [2.1.0, 2.0.0, 1.27, 1.26]
         include:
         - TIKA_VERSION: 2.1.0
           TIKA_JAR: tika-server-standard

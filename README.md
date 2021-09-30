@@ -1,4 +1,8 @@
-# tika-docker [![Build Status](https://api.travis-ci.com/apache/tika-docker.svg?branch=master)](https://travis-ci.com/github/apache/tika-docker)
+# tika-docker [![build and publish](https://github.com/iwishiwasaneagle/tika-docker/actions/workflows/docker-publish.yml/badge.svg)](https://github.com/iwishiwasaneagle/tika-docker/actions/workflows/docker-publish.yml) ![Docker Pulls](https://img.shields.io/docker/pulls/iwishiwasaneagle/apache-tika-arm)
+
+This fork exists to create a `arm64` and `amd64` docker image. In theory these images they are identical to those of [apache/tika-docker](https://github.com/apache/tika-docker).
+
+---
 
 This repo is used to create convenience Docker images for Apache Tika Server published as [apache/tika](https://hub.docker.com/r/apache/tika) on DockerHub by the [Apache Tika](http://tika.apache.org) Dev team
 

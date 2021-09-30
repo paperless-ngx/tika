@@ -1,6 +1,8 @@
-# tika-docker [![build and publish](https://github.com/iwishiwasaneagle/tika-docker/actions/workflows/docker-publish.yml/badge.svg)](https://github.com/iwishiwasaneagle/tika-docker/actions/workflows/docker-publish.yml) ![Docker Pulls](https://img.shields.io/docker/pulls/iwishiwasaneagle/apache-tika-arm)
+# tika-docker [![build and publish](https://github.com/iwishiwasaneagle/tika-docker/actions/workflows/docker-publish.yml/badge.svg)](https://github.com/iwishiwasaneagle/tika-docker/actions/workflows/docker-publish.yml) [![Docker Pulls](https://img.shields.io/docker/pulls/iwishiwasaneagle/apache-tika-arm)](https://hub.docker.com/repository/docker/iwishiwasaneagle/apache-tika-arm)
 
 This fork exists to create a `arm64` and `amd64` docker image. In theory these images are identical to those of [apache/tika-docker](https://github.com/apache/tika-docker).
+
+Find the images at https://hub.docker.com/repository/docker/iwishiwasaneagle/apache-tika-arm
 
 ---
 
@@ -45,11 +47,11 @@ You can see a full set of tags for historical versions [here](https://hub.docker
 
 You can pull down the version you would like using:
 
-    docker pull apache/tika:<tag>
+    docker pull iwishiwasaneagle/apache-tika-arm:<tag>
 
 Then to run the container, execute the following command:
 
-    docker run -d -p 9998:9998 apache/tika:<tag>
+    docker run -d -p 9998:9998 iwishiwasaneagle/apache-tika-arm:<tag>
 
 Where <tag> is the DockerHub tag corresponding to the Apache Tika Server version - e.g. 1.23, 1.22, 1.23-full, 1.22-full.
 

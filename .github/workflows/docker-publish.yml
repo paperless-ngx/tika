@@ -16,12 +16,16 @@ jobs:
         include:
         - TIKA_VERSION: 2.1.0
           TIKA_JAR: tika-server-standard
+          LATEST: true
         - TIKA_VERSION: 2.0.0
           TIKA_JAR: tika-server-standard
+          LATEST: false
         - TIKA_VERSION: 1.27
           TIKA_JAR: tika-server
+          LATEST: false
         - TIKA_VERSION: 1.26
           TIKA_JAR: tika-server
+          LATEST: false
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -31,6 +35,13 @@ jobs:
         run: |
           DOCKER_IMAGE=${{ secrets.DOCKERHUB_USERNAME }}/apache-tika-arm
           TAGS=${DOCKER_IMAGE}:${{ matrix.TIKA_VERSION }}-${{ matrix.TIKA_TYPE }}
+          if [[ ${{ matrix.LATEST }} = true ]]; then
+            if [[ "${{matrix.TIKA_TYPE}}" == "full" ]]; then
+              TAGS=$TAGS,${DOCKER_IMAGE}:latest-full
+            else
+              TAGS=$TAGS,${DOCKER_IMAGE}:latest
+            fi
+          fi
           # Set output parameters.
           echo ::set-output name=tags::${TAGS}
           echo ::set-output name=docker_image::${DOCKER_IMAGE}

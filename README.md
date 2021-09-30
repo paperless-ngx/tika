@@ -2,7 +2,7 @@
 
 This fork exists to create a `arm64` and `amd64` docker image. In theory these images are identical to those of [apache/tika-docker](https://github.com/apache/tika-docker).
 
-Find the images at https://hub.docker.com/repository/docker/iwishiwasaneagle/apache-tika-arm
+Find the images at https://hub.docker.com/r/iwishiwasaneagle/apache-tika-arm/
 
 ---
 

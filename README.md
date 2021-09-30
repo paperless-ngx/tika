@@ -1,6 +1,6 @@
 # tika-docker [![build and publish](https://github.com/iwishiwasaneagle/tika-docker/actions/workflows/docker-publish.yml/badge.svg)](https://github.com/iwishiwasaneagle/tika-docker/actions/workflows/docker-publish.yml) ![Docker Pulls](https://img.shields.io/docker/pulls/iwishiwasaneagle/apache-tika-arm)
 
-This fork exists to create a `arm64` and `amd64` docker image. In theory these images they are identical to those of [apache/tika-docker](https://github.com/apache/tika-docker).
+This fork exists to create a `arm64` and `amd64` docker image. In theory these images are identical to those of [apache/tika-docker](https://github.com/apache/tika-docker).
 
 ---
 

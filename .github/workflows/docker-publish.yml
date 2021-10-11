@@ -11,27 +11,21 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-#         TIKA_TYPE: [full, minimal]
-#         TIKA_VERSION: [2.1.0, 2.0.0, 1.27, 1.26]
-        TIKA_TYPE: [full]
-        TIKA_VERSION: [1.27]
+        TIKA_TYPE: [full, minimal]
+        TIKA_VERSION: [2.1.0, 2.0.0, 1.27, 1.26]
         include:
-#         - TIKA_VERSION: 2.1.0
-#           TIKA_JAR: tika-server-standard
-#           LATEST: true
-#           PLATFORMS: linux/amd64,linux/arm64
-#         - TIKA_VERSION: 2.0.0
-#           TIKA_JAR: tika-server-standard
-#           LATEST: false
-#           PLATFORMS: linux/amd64,linux/arm64
+        - TIKA_VERSION: 2.1.0
+          TIKA_JAR: tika-server-standard
+          LATEST: true
+        - TIKA_VERSION: 2.0.0
+          TIKA_JAR: tika-server-standard
+          LATEST: false
         - TIKA_VERSION: 1.27
           TIKA_JAR: tika-server
           LATEST: false
-          PLATFORMS: linux/amd64,linux/arm64,linux/arm/v7
-#         - TIKA_VERSION: 1.26
-#           TIKA_JAR: tika-server
-#           LATEST: false
-#           PLATFORMS: linux/arm/v7
+        - TIKA_VERSION: 1.26
+          TIKA_JAR: tika-server
+          LATEST: false
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -73,7 +67,7 @@ jobs:
           builder: ${{ steps.buildx.outputs.name }}
           context: .
           file: ./${{ matrix.TIKA_TYPE }}/Dockerfile
-          platforms: ${{ matrix.PLATFORMS }}
+          platforms: linux/amd64,linux/arm64
           push: true
           build-args: |
             TIKA_VERSION=${{ matrix.TIKA_VERSION }}

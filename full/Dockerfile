@@ -37,6 +37,7 @@ ENV NEAREST_TIKA_SERVER_URL="https://www.apache.org/dyn/closer.cgi/tika/${TIKA_J
     ARCHIVE_TIKA_SERVER_ASC_URL="https://archive.apache.org/dist/tika/${TIKA_JAR_NAME}-${TIKA_VERSION}.jar.asc" \
     TIKA_VERSION=$TIKA_VERSION
 
+RUN DEBIAN_FRONTEND=noninteractive apt-get -y install gnupg2 wget ca-certificates
 RUN wget -t 10 --max-redirect 1 --retry-connrefused $NEAREST_TIKA_SERVER_URL -O /${TIKA_JAR_NAME}-${TIKA_VERSION}.jar || rm /${TIKA_JAR_NAME}-${TIKA_VERSION}.jar 
 RUN sh -c "[ -f /${TIKA_JAR_NAME}-${TIKA_VERSION}.jar ]" || wget $NEAREST_TIKA_SERVER_URL_OLD -O /${TIKA_JAR_NAME}-${TIKA_VERSION}.jar || rm /${TIKA_JAR_NAME}-${TIKA_VERSION}.jar 
 RUN sh -c "[ -f /${TIKA_JAR_NAME}-${TIKA_VERSION}.jar ]" || wget $ARCHIVE_TIKA_SERVER_URL -O /${TIKA_JAR_NAME}-${TIKA_VERSION}.jar || rm /${TIKA_JAR_NAME}-${TIKA_VERSION}.jar 
@@ -47,7 +48,6 @@ RUN sh -c "[ -f /${TIKA_JAR_NAME}-${TIKA_VERSION}.jar.asc ]" || wget $ARCHIVE_TI
 RUN sh -c "[ -f /${TIKA_JAR_NAME}-${TIKA_VERSION}.jar.asc ]" || exit 1;
 
 RUN if [ "$CHECK_SIG" = "true" ] ; then \
-        DEBIAN_FRONTEND=noninteractive apt-get -y install gnupg2 wget ca-certificates \
         wget -t 10 --max-redirect 1 --retry-connrefused -q -O keys.gpg https://downloads.apache.org/tika/KEYS \
         gpg --import keys.gpg \
         gpg --verify /${TIKA_JAR_NAME}-${TIKA_VERSION}.jar.asc /${TIKA_JAR_NAME}-${TIKA_VERSION}.jar; \

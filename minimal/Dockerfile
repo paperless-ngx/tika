@@ -46,7 +46,12 @@ RUN sh -c "[ -f /${TIKA_JAR_NAME}-${TIKA_VERSION}.jar.asc ]" || wget $DEFAULT_TI
 RUN sh -c "[ -f /${TIKA_JAR_NAME}-${TIKA_VERSION}.jar.asc ]" || wget $ARCHIVE_TIKA_SERVER_ASC_URL -O /${TIKA_JAR_NAME}-${TIKA_VERSION}.jar.asc || rm /${TIKA_JAR_NAME}-${TIKA_VERSION}.jar.asc
 RUN sh -c "[ -f /${TIKA_JAR_NAME}-${TIKA_VERSION}.jar.asc ]" || exit 1
 
-RUN if [ "$CHECK_SIG" = "true" ] ; then gpg --verify /${TIKA_JAR_NAME}-${TIKA_VERSION}.jar.asc /${TIKA_JAR_NAME}-${TIKA_VERSION}.jar; fi
+RUN if [ "$CHECK_SIG" = "true" ] ; then \
+        DEBIAN_FRONTEND=noninteractive apt-get -y install gnupg2 wget ca-certificates \
+        wget -t 10 --max-redirect 1 --retry-connrefused -q -O keys.gpg https://downloads.apache.org/tika/KEYS \
+        gpg --import keys.gpg \
+        gpg --verify /${TIKA_JAR_NAME}-${TIKA_VERSION}.jar.asc /${TIKA_JAR_NAME}-${TIKA_VERSION}.jar; \
+    fi
 
 FROM dependencies as runtime
 RUN apt-get clean -y && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*

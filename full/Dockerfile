@@ -37,16 +37,27 @@ ENV NEAREST_TIKA_SERVER_URL="https://www.apache.org/dyn/closer.cgi/tika/${TIKA_J
     ARCHIVE_TIKA_SERVER_ASC_URL="https://archive.apache.org/dist/tika/${TIKA_JAR_NAME}-${TIKA_VERSION}.jar.asc" \
     TIKA_VERSION=$TIKA_VERSION
 
-RUN DEBIAN_FRONTEND=noninteractive apt-get -y install gnupg2 wget \
-    && wget -t 10 --max-redirect 1 --retry-connrefused -qO- https://downloads.apache.org/tika/KEYS | gpg --import \
-    && wget -t 10 --max-redirect 1 --retry-connrefused $NEAREST_TIKA_SERVER_URL -O /${TIKA_JAR_NAME}-${TIKA_VERSION}.jar || rm /${TIKA_JAR_NAME}-${TIKA_VERSION}.jar \
-    && sh -c "[ -f /${TIKA_JAR_NAME}-${TIKA_VERSION}.jar ]" || wget $NEAREST_TIKA_SERVER_URL_OLD -O /${TIKA_JAR_NAME}-${TIKA_VERSION}.jar || rm /${TIKA_JAR_NAME}-${TIKA_VERSION}.jar \
-    && sh -c "[ -f /${TIKA_JAR_NAME}-${TIKA_VERSION}.jar ]" || wget $ARCHIVE_TIKA_SERVER_URL -O /${TIKA_JAR_NAME}-${TIKA_VERSION}.jar || rm /${TIKA_JAR_NAME}-${TIKA_VERSION}.jar \
-    && sh -c "[ -f /${TIKA_JAR_NAME}-${TIKA_VERSION}.jar ]" || exit 1 \
-    && wget -t 10 --max-redirect 1 --retry-connrefused $DEFAULT_TIKA_SERVER_ASC_URL -O /${TIKA_JAR_NAME}-${TIKA_VERSION}.jar.asc  || rm /${TIKA_JAR_NAME}-${TIKA_VERSION}.jar.asc \
-    && sh -c "[ -f /${TIKA_JAR_NAME}-${TIKA_VERSION}.jar.asc ]" || wget $DEFAULT_TIKA_SERVER_ASC_URL_OLD -O /${TIKA_JAR_NAME}-${TIKA_VERSION}.jar.asc || rm /${TIKA_JAR_NAME}-${TIKA_VERSION}.jar.asc \
-    && sh -c "[ -f /${TIKA_JAR_NAME}-${TIKA_VERSION}.jar.asc ]" || wget $ARCHIVE_TIKA_SERVER_ASC_URL -O /${TIKA_JAR_NAME}-${TIKA_VERSION}.jar.asc || rm /${TIKA_JAR_NAME}-${TIKA_VERSION}.jar.asc \
-    && sh -c "[ -f /${TIKA_JAR_NAME}-${TIKA_VERSION}.jar.asc ]" || exit 1;
+# RUN DEBIAN_FRONTEND=noninteractive apt-get -y install gnupg2 wget \
+#     && wget -t 10 --max-redirect 1 --retry-connrefused -qO- https://downloads.apache.org/tika/KEYS | gpg --import \
+#     && wget -t 10 --max-redirect 1 --retry-connrefused $NEAREST_TIKA_SERVER_URL -O /${TIKA_JAR_NAME}-${TIKA_VERSION}.jar || rm /${TIKA_JAR_NAME}-${TIKA_VERSION}.jar \
+#     && sh -c "[ -f /${TIKA_JAR_NAME}-${TIKA_VERSION}.jar ]" || wget $NEAREST_TIKA_SERVER_URL_OLD -O /${TIKA_JAR_NAME}-${TIKA_VERSION}.jar || rm /${TIKA_JAR_NAME}-${TIKA_VERSION}.jar \
+#     && sh -c "[ -f /${TIKA_JAR_NAME}-${TIKA_VERSION}.jar ]" || wget $ARCHIVE_TIKA_SERVER_URL -O /${TIKA_JAR_NAME}-${TIKA_VERSION}.jar || rm /${TIKA_JAR_NAME}-${TIKA_VERSION}.jar \
+#     && sh -c "[ -f /${TIKA_JAR_NAME}-${TIKA_VERSION}.jar ]" || exit 1 \
+#     && wget -t 10 --max-redirect 1 --retry-connrefused $DEFAULT_TIKA_SERVER_ASC_URL -O /${TIKA_JAR_NAME}-${TIKA_VERSION}.jar.asc  || rm /${TIKA_JAR_NAME}-${TIKA_VERSION}.jar.asc \
+#     && sh -c "[ -f /${TIKA_JAR_NAME}-${TIKA_VERSION}.jar.asc ]" || wget $DEFAULT_TIKA_SERVER_ASC_URL_OLD -O /${TIKA_JAR_NAME}-${TIKA_VERSION}.jar.asc || rm /${TIKA_JAR_NAME}-${TIKA_VERSION}.jar.asc \
+#     && sh -c "[ -f /${TIKA_JAR_NAME}-${TIKA_VERSION}.jar.asc ]" || wget $ARCHIVE_TIKA_SERVER_ASC_URL -O /${TIKA_JAR_NAME}-${TIKA_VERSION}.jar.asc || rm /${TIKA_JAR_NAME}-${TIKA_VERSION}.jar.asc \
+#     && sh -c "[ -f /${TIKA_JAR_NAME}-${TIKA_VERSION}.jar.asc ]" || exit 1;
+
+RUN DEBIAN_FRONTEND=noninteractive apt-get -y install gnupg2 wget
+RUN wget -t 10 --max-redirect 1 --retry-connrefused -qO- https://downloads.apache.org/tika/KEYS | gpg --import
+RUN wget -t 10 --max-redirect 1 --retry-connrefused $NEAREST_TIKA_SERVER_URL -O /${TIKA_JAR_NAME}-${TIKA_VERSION}.jar || rm /${TIKA_JAR_NAME}-${TIKA_VERSION}.jar 
+RUN sh -c "[ -f /${TIKA_JAR_NAME}-${TIKA_VERSION}.jar ]" || wget $NEAREST_TIKA_SERVER_URL_OLD -O /${TIKA_JAR_NAME}-${TIKA_VERSION}.jar || rm /${TIKA_JAR_NAME}-${TIKA_VERSION}.jar 
+RUN sh -c "[ -f /${TIKA_JAR_NAME}-${TIKA_VERSION}.jar ]" || wget $ARCHIVE_TIKA_SERVER_URL -O /${TIKA_JAR_NAME}-${TIKA_VERSION}.jar || rm /${TIKA_JAR_NAME}-${TIKA_VERSION}.jar 
+RUN sh -c "[ -f /${TIKA_JAR_NAME}-${TIKA_VERSION}.jar ]" || exit 1 
+RUN wget -t 10 --max-redirect 1 --retry-connrefused $DEFAULT_TIKA_SERVER_ASC_URL -O /${TIKA_JAR_NAME}-${TIKA_VERSION}.jar.asc  || rm /${TIKA_JAR_NAME}-${TIKA_VERSION}.jar.asc 
+RUN sh -c "[ -f /${TIKA_JAR_NAME}-${TIKA_VERSION}.jar.asc ]" || wget $DEFAULT_TIKA_SERVER_ASC_URL_OLD -O /${TIKA_JAR_NAME}-${TIKA_VERSION}.jar.asc || rm /${TIKA_JAR_NAME}-${TIKA_VERSION}.jar.asc 
+RUN sh -c "[ -f /${TIKA_JAR_NAME}-${TIKA_VERSION}.jar.asc ]" || wget $ARCHIVE_TIKA_SERVER_ASC_URL -O /${TIKA_JAR_NAME}-${TIKA_VERSION}.jar.asc || rm /${TIKA_JAR_NAME}-${TIKA_VERSION}.jar.asc 
+RUN sh -c "[ -f /${TIKA_JAR_NAME}-${TIKA_VERSION}.jar.asc ]" || exit 1;
 
 RUN if [ "$CHECK_SIG" = "true" ] ; then gpg --verify /${TIKA_JAR_NAME}-${TIKA_VERSION}.jar.asc /${TIKA_JAR_NAME}-${TIKA_VERSION}.jar; fi
 

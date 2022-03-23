@@ -11,18 +11,18 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        TIKA_TYPE: [full] # , minimal]
-        TIKA_VERSION: [2.1.0] #, 2.0.0, 1.27, 1.26]
+        TIKA_TYPE: [full, minimal]
+        TIKA_VERSION: [1.27, 2.1.0]
         include:
         - TIKA_VERSION: 2.1.0
-          TIKA_JAR: tika-server-standard
+          TIKA_JAR_NAME: tika-server-standard
           LATEST: true
 #         - TIKA_VERSION: 2.0.0
 #           TIKA_JAR: tika-server-standard
 #           LATEST: false
-#         - TIKA_VERSION: 1.27
-#           TIKA_JAR: tika-server
-#           LATEST: false
+        - TIKA_VERSION: 1.27
+          TIKA_JAR_NAME: tika-server
+          LATEST: false
 #         - TIKA_VERSION: 1.26
 #           TIKA_JAR: tika-server
 #           LATEST: false
@@ -71,5 +71,5 @@ jobs:
           push: true
           build-args: |
             TIKA_VERSION=${{ matrix.TIKA_VERSION }}
-            TIKA_JAR_NAME=${{ matrix.TIKA_JAR }}
+            TIKA_JAR_NAME=${{ matrix.TIKA_JAR_NAME }}
           tags: ${{ steps.prep.outputs.tags }}

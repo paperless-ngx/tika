@@ -30,8 +30,8 @@ ENV ARCHIVE_TIKA_SERVER_URL="https://archive.apache.org/dist/tika/${TIKA_VERSION
     ARCHIVE_TIKA_SERVER_ASC_URL="https://archive.apache.org/dist/tika/${TIKA_VERSION}/${TIKA_JAR_NAME}-${TIKA_VERSION}.jar.asc" \
     TIKA_VERSION=$TIKA_VERSION
 
-RUN wget -t 10 --max-redirect 1 --retry-connrefused $ARCHIVE_TIKA_SERVER_URL -O /${TIKA_JAR_NAME}-${TIKA_VERSION}.jar
-RUN wget -t 10 --max-redirect 1 --retry-connrefused $ARCHIVE_TIKA_SERVER_ASC_URL -O /${TIKA_JAR_NAME}-${TIKA_VERSION}.jar.asc || rm /${TIKA_JAR_NAME}-${TIKA_VERSION}.jar.asc 
+RUN wget -t 10 -k --max-redirect 1 --retry-connrefused $ARCHIVE_TIKA_SERVER_URL -O /${TIKA_JAR_NAME}-${TIKA_VERSION}.jar
+RUN wget -t 10 -k --max-redirect 1 --retry-connrefused $ARCHIVE_TIKA_SERVER_ASC_URL -O /${TIKA_JAR_NAME}-${TIKA_VERSION}.jar.asc || rm /${TIKA_JAR_NAME}-${TIKA_VERSION}.jar.asc 
 
 RUN if [ "$CHECK_SIG" = "true" ] ; then \
         wget -t 10 --max-redirect 1 --retry-connrefused -q -O keys.gpg https://downloads.apache.org/tika/KEYS \

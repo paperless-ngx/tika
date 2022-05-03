@@ -6,6 +6,9 @@ on:
       - master
   workflow_dispatch:
 
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
 jobs:
   docker:
     runs-on: ubuntu-latest
@@ -17,15 +20,9 @@ jobs:
         - TIKA_VERSION: 2.1.0
           TIKA_JAR_NAME: tika-server-standard
           LATEST: true
-#         - TIKA_VERSION: 2.0.0
-#           TIKA_JAR: tika-server-standard
-#           LATEST: false
         - TIKA_VERSION: 1.27
           TIKA_JAR_NAME: tika-server
           LATEST: false
-#         - TIKA_VERSION: 1.26
-#           TIKA_JAR: tika-server
-#           LATEST: false
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -33,7 +30,7 @@ jobs:
       - name: Prepare
         id: prep
         run: |
-          DOCKER_IMAGE=${{ secrets.DOCKERHUB_USERNAME }}/apache-tika-arm
+          DOCKER_IMAGE=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           TAGS=${DOCKER_IMAGE}:${{ matrix.TIKA_VERSION }}-${{ matrix.TIKA_TYPE }}
           if [[ ${{ matrix.LATEST }} = true ]]; then
             if [[ "${{matrix.TIKA_TYPE}}" == "full" ]]; then
@@ -54,12 +51,13 @@ jobs:
         id: buildx
         uses: docker/setup-buildx-action@master
 
-      - name: Login to DockerHub
+      - name: Login to ghcr.io 
         if: github.event_name != 'pull_request'
         uses: docker/login-action@v1
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build
         uses: docker/build-push-action@v2

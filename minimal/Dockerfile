@@ -10,7 +10,7 @@
 # WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 # License for the specific language governing permissions and limitations under
 # the License.
-FROM ubuntu:focal as base
+FROM ubuntu:jammy as base
 RUN apt-get update
 
 FROM base as dependencies
@@ -31,7 +31,7 @@ ENV ARCHIVE_TIKA_SERVER_URL="https://archive.apache.org/dist/tika/${TIKA_VERSION
     TIKA_VERSION=$TIKA_VERSION
 
 RUN wget -t 10 --no-check-certificate --max-redirect 1 --retry-connrefused $ARCHIVE_TIKA_SERVER_URL -O /${TIKA_JAR_NAME}-${TIKA_VERSION}.jar
-RUN wget -t 10 --no-check-certificate --max-redirect 1 --retry-connrefused $ARCHIVE_TIKA_SERVER_ASC_URL -O /${TIKA_JAR_NAME}-${TIKA_VERSION}.jar.asc || rm /${TIKA_JAR_NAME}-${TIKA_VERSION}.jar.asc 
+RUN wget -t 10 --no-check-certificate --max-redirect 1 --retry-connrefused $ARCHIVE_TIKA_SERVER_ASC_URL -O /${TIKA_JAR_NAME}-${TIKA_VERSION}.jar.asc || rm /${TIKA_JAR_NAME}-${TIKA_VERSION}.jar.asc
 
 RUN if [ "$CHECK_SIG" = "true" ] ; then \
         wget -t 10 --no-check-certificate --max-redirect 1 --retry-connrefused -q -O keys.gpg https://downloads.apache.org/tika/KEYS \

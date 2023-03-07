@@ -5,6 +5,9 @@ on:
     branches:
       - master
   workflow_dispatch:
+  # Rebuild monthly to keep packages up to date
+  schedule:
+    - cron: '0 0 1 * *'
 
 env:
   REGISTRY: ghcr.io

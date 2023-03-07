@@ -67,7 +67,6 @@ jobs:
           build-args: |
             TIKA_VERSION=${{ matrix.TIKA_VERSION }}
             TIKA_JAR_NAME=${{ matrix.TIKA_JAR_NAME }}
-            CHECK_SIG=false
           tags: ${{ steps.prep.outputs.tags }}
           cache-from: type=gha
           cache-to: type=gha,mode=max

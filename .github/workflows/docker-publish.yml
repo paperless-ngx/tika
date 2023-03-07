@@ -15,14 +15,11 @@ jobs:
     strategy:
       matrix:
         TIKA_TYPE: [full, minimal]
-        TIKA_VERSION: [1.28.5, 2.5.0]
+        TIKA_VERSION: [2.5.0]
         include:
         - TIKA_VERSION: 2.5.0
           TIKA_JAR_NAME: tika-server-standard
           LATEST: true
-        - TIKA_VERSION: 1.28.5
-          TIKA_JAR_NAME: tika-server
-          LATEST: false
     steps:
       - name: Checkout
         uses: actions/checkout@v3

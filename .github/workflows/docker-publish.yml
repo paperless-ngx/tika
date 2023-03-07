@@ -16,6 +16,9 @@ env:
 jobs:
   docker:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
     strategy:
       matrix:
         TIKA_TYPE: [full, minimal]
@@ -23,20 +26,17 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+      -
+        name: Gather Docker metadata
+        id: docker-meta
+        uses: docker/metadata-action@v4
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=raw,value=${{ matrix.TIKA_VERSION }}-${{ matrix.TIKA_TYPE }}
+            type=raw,enable=${{ matrix.TIKA_TYPE == 'minimal'}},value=latest
+            type=raw,enable=${{ matrix.TIKA_TYPE == 'full'}},value=latest-full
 
-      - name: Prepare
-        id: prep
-        run: |
-          DOCKER_IMAGE=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-          TAGS=${DOCKER_IMAGE}:${{ matrix.TIKA_VERSION }}-${{ matrix.TIKA_TYPE }}
-          if [[ "${{matrix.TIKA_TYPE}}" == "full" ]]; then
-            TAGS=$TAGS,${DOCKER_IMAGE}:latest-full
-          else
-            TAGS=$TAGS,${DOCKER_IMAGE}:latest
-          fi
-          # Set output parameters.
-          echo "tags"=${TAGS} >> $GITHUB_OUTPUT
-          echo "docker_image"=${DOCKER_IMAGE} >> $GITHUB_OUTPUT
       - name: Set up QEMU
         uses: docker/setup-qemu-action@master
         with:
@@ -65,6 +65,7 @@ jobs:
           build-args: |
             TIKA_VERSION=${{ matrix.TIKA_VERSION }}
             TIKA_JAR_NAME=${{ env.TIKA_JAR_NAME }}
-          tags: ${{ steps.prep.outputs.tags }}
+          tags: ${{ steps.docker-meta.outputs.tags }}
+          labels: ${{ steps.docker-meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max

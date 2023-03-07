@@ -29,7 +29,7 @@ Below are the most recent 2.x series tags:
 - `2.1.0`: Apache Tika Server 2.1.0 (Minimal)
 - `2.1.0-full`: Apache Tika Server 2.1.0 (Full)
 
-Below are the most recent 1.x series tags:
+Below are the most recent 1.x series tags. **Note** that as of 30 September 2022, the 1.x branch is no longer supported.
 
 - `1.27`: Apache Tika Server 1.27 (Minimal)
 - `1.27-full`: Apache Tika Server 1.27 (Full)
@@ -72,6 +72,10 @@ To meet up with others using Apache Tika, consider coming to one of the [Apache 
 
 For more information on the Apache Software Foundation, go to the [Apache Software Foundation](http://apache.org) website.
 
+For a full list of changes as of 2.5.0.1, visit [CHANGES.md](CHANGES.md).
+
+For our current release process, visit [tika-docker Release Process](https://cwiki.apache.org/confluence/display/TIKA/Release+Process+for+tika-docker)
+
 ## Authors
 
 Apache Tika Dev Team (dev@tika.apache.org)
@@ -84,8 +88,9 @@ There have been a range of [contributors](https://github.com/apache/tika-docker/
 - [@arjunyel](https://github.com/arjunyel)
 - [@mpdude](https://github.com/mpdude)
 - [@laszlocsontosuw](https://github.com/laszlocsontosuw)
+- [@tallisonapache](https://github.com/tballison)
 
-## Licence
+## License
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

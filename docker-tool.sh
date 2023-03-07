@@ -22,10 +22,10 @@ while getopts ":h" opt; do
     h )
       echo "Usage:"
       echo "    docker-tool.sh -h                      Display this help message."
-      echo "    docker-tool.sh build <TIKA_VERSION>    Builds images for <TIKA_VERSION>."
-      echo "    docker-tool.sh test <TIKA_VERSION>     Tests images for <TIKA_VERSION>."
-      echo "    docker-tool.sh publish <TIKA_VERSION>  Publishes images for <TIKA_VERSION> to Docker Hub."
-      echo "    docker-tool.sh latest <TIKA_VERSION>   Tags images for <TIKA_VERSION> as latest on Docker Hub."
+      echo "    docker-tool.sh build <TIKA_DOCKER_VERSION> <TIKA_VERSION>   Builds <TIKA_DOCKER_VERSION> images for <TIKA_VERSION>."
+      echo "    docker-tool.sh test <TIKA_DOCKER_VERSION>     Tests images for <TIKA_DOCKER_VERSION>."
+      echo "    docker-tool.sh publish <TIKA_DOCKER_VERSION>  Publishes images for <TIKA_DOCKER_VERSION> to Docker Hub."
+      echo "    docker-tool.sh latest <TIKA_DOCKER_VERSION>   Tags images for <TIKA_DOCKER_VERSION> as latest on Docker Hub."
       exit 0
       ;;
    \? )
@@ -37,60 +37,67 @@ done
 
 
 test_docker_image() {
-     docker run -d --name "$1" -p 9998:9998 apache/tika:"$1"
+     docker run -d --name "$1" -p 127.0.0.1:9998:9998 apache/tika:"$1"
      sleep 10
-     url=http://localhost:9998/version
+     url=http://localhost:9998/
      status=$(curl --head --location --connect-timeout 5 --write-out %{http_code} --silent --output /dev/null ${url})
+     user=$(docker inspect "$1" --format '{{.Config.User}}')
 
      if [[ $status == '200' ]]
      then
-      echo "$(tput setaf 2)Image: apache/tika:${1} - Passed$(tput sgr0)"
-      docker kill "$1"
-      docker rm "$1"
+      echo "$(tput setaf 2)Image: apache/tika:${1} - Basic test passed$(tput sgr0)"
      else
-      echo "$(tput setaf 1)Image: apache/tika:${1} - Failed$(tput sgr0)"
+      echo "$(tput setaf 1)Image: apache/tika:${1} - Basic test failed$(tput sgr0)"
       docker kill "$1"
       docker rm "$1"
       exit 1
+     fi
+
+     #now test that the user is correctly set
+     if [[ $user == '35002:35002' ]]
+      then
+       echo "$(tput setaf 2)Image: apache/tika:${1} - User passed$(tput sgr0)"
+       docker kill "$1"
+       docker rm "$1"
+      else
+       echo "$(tput setaf 1)Image: apache/tika:${1} - User failed$(tput sgr0)"
+        docker kill "$1"
+        docker rm "$1"
+        exit 1
      fi
 }
 
 shift $((OPTIND -1))
 subcommand=$1; shift
-version=$1; shift
-jar=$1; shift
-
-if [ -z "$jar" ]
-then
-  jar="tika-server-standard"
-fi
+tika_docker_version=$1; shift
+tika_version=$1; shift
 
 
 case "$subcommand" in
   build)
-    # Build slim version with minimal dependencies
-    docker build -t apache/tika:${version} --build-arg TIKA_VERSION=${version} --build-arg TIKA_JAR_NAME=${jar} - < minimal/Dockerfile --no-cache
-    # Build full version with OCR, Fonts and GDAL
-    docker build -t apache/tika:${version}-full --build-arg TIKA_VERSION=${version} --build-arg TIKA_JAR_NAME=${jar} - < full/Dockerfile --no-cache
+    # Build slim tika- with minimal dependencies
+    docker build -t apache/tika:${tika_docker_version} --build-arg TIKA_VERSION=${tika_version} - < minimal/Dockerfile --no-cache
+    # Build full tika- with OCR, Fonts and GDAL
+    docker build -t apache/tika:${tika_docker_version}-full --build-arg TIKA_VERSION=${tika_version} - < full/Dockerfile --no-cache
     ;;
 
   test)
     # Test the images
-    test_docker_image ${version}
-    test_docker_image "${version}-full"
+    test_docker_image ${tika_docker_version}
+    test_docker_image "${tika_docker_version}-full"
     ;;
 
   publish)
     # Push the build images
-    docker push apache/tika:${version}
-    docker push apache/tika:${version}-full
+    docker push apache/tika:${tika_docker_version}
+    docker push apache/tika:${tika_docker_version}-full
     ;;
 
   latest)
-    # Update the latest tags to point to supplied version
-    docker tag apache/tika:${version} apache/tika:latest
+    # Update the latest tags to point to supplied tika-
+    docker tag apache/tika:${tika_docker_version} apache/tika:latest
     docker push apache/tika:latest
-    docker tag apache/tika:${version}-full apache/tika:latest-full
+    docker tag apache/tika:${tika_docker_version}-full apache/tika:latest-full
     docker push apache/tika:latest-full
     ;;
 

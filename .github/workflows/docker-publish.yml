@@ -12,17 +12,23 @@ on:
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
-  TIKA_JAR_NAME: "tika-server-standard"
+  TIKA_VERSION: "2.7.0"
 jobs:
   docker:
+    name: Build image ${{ matrix.type }}
     runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
     strategy:
       matrix:
-        TIKA_TYPE: [full, minimal]
-        TIKA_VERSION: [2.7.0]
+        include:
+          - type: full
+            platforms: linux/amd64,linux/arm64,linux/arm/v7
+          - type: minimal
+            platforms: linux/amd64,linux/arm64,linux/arm/v7
+          - type: alpine
+            platforms: linux/amd64,linux/arm64
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -33,9 +39,10 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
-            type=raw,value=${{ matrix.TIKA_VERSION }}-${{ matrix.TIKA_TYPE }}
-            type=raw,enable=${{ matrix.TIKA_TYPE == 'minimal'}},value=latest
-            type=raw,enable=${{ matrix.TIKA_TYPE == 'full'}},value=latest-full
+            type=raw,value=${{ env.TIKA_VERSION }}-${{ matrix.type }}
+            type=raw,enable=${{ matrix.type == 'minimal'}},value=latest
+            type=raw,enable=${{ matrix.type == 'full'}},value=latest-full
+            type=raw,enable=${{ matrix.type == 'alpine'}},value=latest-alpine
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@master
@@ -59,12 +66,11 @@ jobs:
         with:
           builder: ${{ steps.buildx.outputs.name }}
           context: .
-          file: ./${{ matrix.TIKA_TYPE }}/Dockerfile
-          platforms: linux/amd64,linux/arm64,linux/arm/v7
+          file: ./${{ matrix.type }}/Dockerfile
+          platforms: ${{ matrix.platforms }}
           push: true
           build-args: |
-            TIKA_VERSION=${{ matrix.TIKA_VERSION }}
-            TIKA_JAR_NAME=${{ env.TIKA_JAR_NAME }}
+            TIKA_VERSION=${{ env.TIKA_VERSION }}
           tags: ${{ steps.docker-meta.outputs.tags }}
           labels: ${{ steps.docker-meta.outputs.labels }}
           cache-from: type=gha

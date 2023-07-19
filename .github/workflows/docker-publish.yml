@@ -38,7 +38,7 @@ jobs:
             type=raw,enable=${{ matrix.TIKA_TYPE == 'full'}},value=latest-full
 
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@master
+        uses: docker/setup-qemu-action@v2
         with:
           platforms: all
 
@@ -61,7 +61,7 @@ jobs:
           context: .
           file: ./${{ matrix.TIKA_TYPE }}/Dockerfile
           platforms: linux/amd64,linux/arm64,linux/arm/v7
-          push: true
+          push: ${{ github.event_name != 'pull_request' }}
           build-args: |
             TIKA_VERSION=${{ matrix.TIKA_VERSION }}
             TIKA_JAR_NAME=${{ env.TIKA_JAR_NAME }}

@@ -22,7 +22,7 @@ jobs:
     strategy:
       matrix:
         TIKA_TYPE: [full, minimal]
-        TIKA_VERSION: [2.8.0]
+        TIKA_VERSION: [2.9.0]
     steps:
       - name: Checkout
         uses: actions/checkout@v3

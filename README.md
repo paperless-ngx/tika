@@ -4,7 +4,7 @@
 
 This fork exists to add the `arm64` and `armv7` architectures to the tika docker image. In theory these images are identical to those of [apache/tika-docker](https://github.com/apache/tika-docker). This enables users of [paperless-ngx](https://github.com/paperless-ngx/paperless-ngx/) to run on more devices, such as Raspberry Pis
 
-⚠ This image is currently being used in the main repo's docker example files found [here](https://github.com/paperless-ngx/paperless-ngx/tree/main/docker/compose).
+⚠ As of 2024-05-21, Apache is now publishing multi-architecture images, and this repository is archived.  Please update your images to point to `docker.io/apache/tika:latest`
 
 ---
 
